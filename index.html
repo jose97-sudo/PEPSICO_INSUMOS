@@ -43,9 +43,7 @@
         <!-- Los valores se insertarán dinámicamente -->
         <div id="descripcion">Producto A</div>
         <div id="cantidad">5</div>
-
-        <div id="descripcion2">Producto B</div>
-        <div id="cantidad2">2</div>
+        <div id="pedido">5</div>
     </div>
 
     <form id="confirmarForm">
@@ -57,16 +55,10 @@
         const urlParams = new URLSearchParams(window.location.search);
         const pedidoId = urlParams.get('NoPedido'); // 'id' es el parámetro del pedido en la URL
 
-        // Aquí puedes agregar la lógica para consultar datos con el pedidoId desde SharePoint
-        console.log('ID del Pedido:', pedidoId);
-
-        // Función para confirmar el pedido
-        function confirmarPedido() {
-            alert("Pedido confirmado con éxito");
-            // Aquí puedes agregar el flujo de Power Automate para confirmar el pedido
-        }
+         document.getElementById('pedido').textContent = "NUMERO DE PEDIDO :  "  + pedidoId
     </script>
 
 </body>
 </html>
+
 
