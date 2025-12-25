@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Pedido</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .container div {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Detalles del Pedido</h2>
+    
+    <div class="container">
+        <div><strong>Descripción</strong></div>
+        <div><strong>Cantidad</strong></div>
+        
+        <!-- Los valores se insertarán dinámicamente -->
+        <div id="descripcion">Producto A</div>
+        <div id="cantidad">5</div>
+
+        <div id="descripcion2">Producto B</div>
+        <div id="cantidad2">2</div>
+    </div>
+
+    <form id="confirmarForm">
+        <button type="button" onclick="confirmarPedido()">Confirmar Pedido</button>
+    </form>
+
+    <script>
+        // Lógica para obtener los parámetros del URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const pedidoId = urlParams.get('id'); // 'id' es el parámetro del pedido en la URL
+
+        // Aquí puedes agregar la lógica para consultar datos con el pedidoId desde SharePoint
+        console.log('ID del Pedido:', pedidoId);
+
+        // Función para confirmar el pedido
+        function confirmarPedido() {
+            alert("Pedido confirmado con éxito");
+            // Aquí puedes agregar el flujo de Power Automate para confirmar el pedido
+        }
+    </script>
+
+</body>
+</html>
