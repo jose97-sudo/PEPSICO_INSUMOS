@@ -48,8 +48,17 @@
         <!-- Los valores se insertarán dinámicamente -->
        
         
-        <div id="descripcion">Producto A</div>
-        <div id="cantidad">5</div>
+       <table border="1" id="detallePedido">
+    <thead>
+        <tr>
+            <th>Descripción</th>
+            <th>Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Los datos se agregarán aquí dinámicamente con JavaScript -->
+    </tbody>
+</table>
        
     </div>
 
@@ -57,18 +66,41 @@
         <button type="button" onclick="confirmarPedido()">Confirmar Pedido</button>
     </form>
 
-    <script>
-        // Lógica para obtener los parámetros del URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const pedidoId = urlParams.get('NoPedido'); // 'id' es el parámetro del pedido en la URL
+<script>
+    // Lógica para obtener los parámetros del URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const noPedido = urlParams.get('NoPedido'); // 'NoPedido' es el parámetro del pedido en la URL
 
-         document.getElementById('pedido').textContent = "NUMERO DE PEDIDO :  "  + pedidoId;
+    document.getElementById('pedido').textContent = "NUMERO DE PEDIDO :  "  + noPedido;
 
-      
-    </script>
+    async function cargarDetalle() {
+        const flujoUrl = "https://default42cc3295cd0e449cb98e5ce5b560c1.d3.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/b500585ae1344d17b574bd606abf9499/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=h5ucFy0Wlhz6LA-4FypN459-Ffyleid1LvyqJOmyVF4"; // Reemplaza con la URL de tu flujo
+        const response = await fetch(flujoUrl, {
+            method: "POST", 
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ "NoPedido": noPedido }) // Enviar el NoPedido al flujo
+        });
+
+        const datos = await response.json();
+
+        const tbody = document.getElementById("detallePedido").querySelector("tbody");
+        tbody.innerHTML = ""; // Limpiar tabla
+
+        datos.forEach(item => {
+            const fila = document.createElement("tr");
+            fila.innerHTML = <td>${item.Descripcion}</td><td>${item.Cantidad}</td>;  // Aquí se corrigieron las comillas
+            tbody.appendChild(fila);
+        });
+    }
+
+    cargarDetalle();
+</script>
+
+
     
 </body>
 </html>
+
 
 
 
