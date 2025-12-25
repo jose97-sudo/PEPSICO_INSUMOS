@@ -55,10 +55,16 @@
         const urlParams = new URLSearchParams(window.location.search);
         const pedidoId = urlParams.get('NoPedido'); // 'id' es el parámetro del pedido en la URL
 
-         document.getElementById('pedido').textContent = "NUMERO DE PEDIDO :  "  + pedidoId
-    </script>
+         document.getElementById('pedido').textContent = "NUMERO DE PEDIDO :  "  + pedidoId;
 
+        function confirmarPedido() {
+            alert("Pedido confirmado con éxito");
+            // Aquí puedes agregar el flujo de Power Automate para confirmar el pedido
+        }
+    </script>
+    
 </body>
 </html>
+
 
 
