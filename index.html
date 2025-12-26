@@ -38,27 +38,21 @@
     
     <div class="container">
 
-          <div id="pedido"></div>
+        <div id="pedido"></div>
 
         <br>
-        
-     
-        
 
-       
-        
-       <table border="1" id="detallePedido">
-    <thead>
-        <tr>
-            <th>Descripción</th>
-            <th>Cantidad</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Los datos se agregarán aquí dinámicamente con JavaScript -->
-    </tbody>
-</table>
-       
+        <table border="1" id="detallePedido">
+            <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los datos se agregarán aquí dinámicamente con JavaScript -->
+            </tbody>
+        </table>
     </div>
 
     <form id="confirmarForm">
@@ -72,79 +66,54 @@
 
     document.getElementById('pedido').textContent = "NUMERO DE PEDIDO :  "  + noPedido;
 
+    async function cargarDetalle() {
+        // URL de la lista de SharePoint
+        const siteUrl = "https://pepsico.sharepoint.com/sites/INSUMOS"; // Tu URL base
+        const listName = "SOLICITUD_INSUMOS"; // El nombre de tu lista en SharePoint
 
+        // URL de la consulta REST a SharePoint (filtra por NoPedido)
+        const requestUrl = ${siteUrl}/_api/web/lists/getbytitle('${listName}')/items?$filter=NoPedido eq '${noPedido}';
 
+        try {
+            // Realizar la solicitud GET a SharePoint
+            const response = await fetch(requestUrl, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json" // Indica que quieres la respuesta en formato JSON
+                }
+            });
 
-async function cargarDetalle() {
-
-    
-
-    // URL de la lista de SharePoint
-    const siteUrl = "https://pepsico.sharepoint.com/sites/INSUMOS"; // Tu URL base
-    const listName = "SOLICITUD_INSUMOS"; // El nombre de tu lista en SharePoint
-
-    // URL de la consulta REST a SharePoint (filtra por NoPedido)
-    const requestUrl = ${siteUrl}/_api/web/lists/getbytitle('${listName}')/items?$filter=NoPedido eq '${noPedido}';
-
-    try {
-        // Realizar la solicitud GET a SharePoint
-        const response = await fetch(requestUrl, {
-            method: "GET",
-            headers: {
-                "Accept": "application/json", // Indica que quieres la respuesta en formato JSON
-                "Authorization": "Bearer <tu_token_o_autorizacion>" // Si usas un token, agrégalo aquí
+            // Verifica si la solicitud fue exitosa
+            if (!response.ok) {
+                console.error("Error al consultar SharePoint:", response.statusText);
+                return;
             }
-        });
 
-        // Verifica si la solicitud fue exitosa
-        if (!response.ok) {
-            console.error("Error al consultar SharePoint:", response.statusText);
-            return;
+            // Parsear los datos recibidos de SharePoint
+            const data = await response.json();
+
+            // Acceder a la tabla y limpiar el contenido actual
+            const tbody = document.getElementById("detallePedido").querySelector("tbody");
+            tbody.innerHTML = ""; // Limpiar la tabla
+
+            // Iterar sobre los elementos obtenidos de SharePoint
+            data.value.forEach(item => {
+                const fila = document.createElement("tr");
+
+                // Crear celdas para P_INSUMOS y CANTIDAD_APROBADA (asegúrate de que estos sean los nombres correctos de las columnas en SharePoint)
+                fila.innerHTML = <td>${item.P_INSUMOS}</td><td>${item.CANTIDAD_APROBADA}</td>; // Aquí usé los nombres correctos de las columnas
+
+                // Agregar la fila a la tabla
+                tbody.appendChild(fila);
+            });
+        } catch (error) {
+            console.error("Error al obtener los datos:", error);
         }
-
-        // Parsear los datos recibidos de SharePoint
-        const data = await response.json();
-
-        // Acceder a la tabla y limpiar el contenido actual
-        const tbody = document.getElementById("detallePedido").querySelector("tbody");
-        tbody.innerHTML = ""; // Limpiar la tabla
-
-        // Iterar sobre los elementos obtenidos de SharePoint
-        data.value.forEach(item => {
-            const fila = document.createElement("tr");
-
-            // Crear celdas para Descripcion y Cantidad (asegúrate de que estos sean los nombres correctos de las columnas en SharePoint)
-            fila.innerHTML = <td>${item.Descripcion}</td><td>${item.Cantidad}</td>;
-
-            // Agregar la fila a la tabla
-            tbody.appendChild(fila);
-        });
-    } catch (error) {
-        console.error("Error al obtener los datos:", error);
     }
-}
 
-// Llamamos a la función para cargar los datos cuando la página se cargue
-cargarDetalle();
-
-
-
-    
-    
+    // Llamamos a la función para cargar los datos cuando la página se cargue
+    cargarDetalle();
 </script>
 
-
-    
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
