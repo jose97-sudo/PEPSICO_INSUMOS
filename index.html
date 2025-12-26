@@ -75,38 +75,69 @@
 
 
 
+async function cargarDetalle() {
 
-    /*
+    
 
-    async function cargarDetalle() {
-        const flujoUrl = "https://default42cc3295cd0e449cb98e5ce5b560c1.d3.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/b500585ae1344d17b574bd606abf9499/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=h5ucFy0Wlhz6LA-4FypN459-Ffyleid1LvyqJOmyVF4"; // Reemplaza con la URL de tu flujo
-        const response = await fetch(flujoUrl, {
-            method: "POST", 
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ "NoPedido": noPedido }) // Enviar el NoPedido al flujo
+    // URL de la lista de SharePoint
+    const siteUrl = "https://pepsico.sharepoint.com/sites/INSUMOS"; // Tu URL base
+    const listName = "SOLICITUD_INSUMOS"; // El nombre de tu lista en SharePoint
+
+    // URL de la consulta REST a SharePoint (filtra por NoPedido)
+    const requestUrl = ${siteUrl}/_api/web/lists/getbytitle('${listName}')/items?$filter=NoPedido eq '${noPedido}';
+
+    try {
+        // Realizar la solicitud GET a SharePoint
+        const response = await fetch(requestUrl, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json", // Indica que quieres la respuesta en formato JSON
+                "Authorization": "Bearer <tu_token_o_autorizacion>" // Si usas un token, agrégalo aquí
+            }
         });
 
-        const datos = await response.json();
+        // Verifica si la solicitud fue exitosa
+        if (!response.ok) {
+            console.error("Error al consultar SharePoint:", response.statusText);
+            return;
+        }
 
+        // Parsear los datos recibidos de SharePoint
+        const data = await response.json();
+
+        // Acceder a la tabla y limpiar el contenido actual
         const tbody = document.getElementById("detallePedido").querySelector("tbody");
-        tbody.innerHTML = ""; // Limpiar tabla
+        tbody.innerHTML = ""; // Limpiar la tabla
 
-        datos.forEach(item => {
+        // Iterar sobre los elementos obtenidos de SharePoint
+        data.value.forEach(item => {
             const fila = document.createElement("tr");
-            fila.innerHTML = <td>${item.Descripcion}</td><td>${item.Cantidad}</td>;  // Aquí se corrigieron las comillas
+
+            // Crear celdas para Descripcion y Cantidad (asegúrate de que estos sean los nombres correctos de las columnas en SharePoint)
+            fila.innerHTML = <td>${item.Descripcion}</td><td>${item.Cantidad}</td>;
+
+            // Agregar la fila a la tabla
             tbody.appendChild(fila);
         });
+    } catch (error) {
+        console.error("Error al obtener los datos:", error);
     }
+}
 
-    cargarDetalle();
+// Llamamos a la función para cargar los datos cuando la página se cargue
+cargarDetalle();
 
-    */
+
+
+    
+    
 </script>
 
 
     
 </body>
 </html>
+
 
 
 
